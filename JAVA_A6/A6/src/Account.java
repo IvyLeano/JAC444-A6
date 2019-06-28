@@ -11,6 +11,9 @@ public class Account implements Serializable {
 	private Date m_dateCreated;
 	private int m_pin;
 	
+	Account[] m_accounts = new Account[10];
+	
+	
 	Account(){
 		m_id = 0;
 		m_firstName = "\0";
@@ -18,6 +21,7 @@ public class Account implements Serializable {
 		m_balance = 0.0;
 		m_annualInterestRate = 0.0;
 		m_dateCreated = new Date();
+		m_pin = 0;
 	}
 	Account(int id, double balance){
 		m_id = id;
@@ -64,12 +68,11 @@ public class Account implements Serializable {
 	void setAnnualInterestRate(double annualInterestRate) {
 		m_annualInterestRate = annualInterestRate;
 	}
-	void setFirstName(String firstName) {
+	void setName(String firstName, String lastName) {
 		m_firstName = firstName;
-	}
-	void setLastName(String lastName) {
 		m_firstName = lastName;
 	}
+	
 	void setPin(int pin) {
 		m_pin = pin;
 	}
@@ -82,15 +85,30 @@ public class Account implements Serializable {
 		double balance = getBalance() + depositAmount;
 		setBalance(balance);
 	}
-	//if pin exists it will return the account number
-	//if it does not it will return 0, account numbers start at 1
-	int accountExists(Account[] account, int pin) {
-		int accountNumber = 0;
+	void initializeAccounts(double balance) {
 		for(int i = 0; i < 10; i++) {
-			if(account[i].getPin() == pin) {
-				accountNumber = i + 1;
+			m_accounts[i] = new Account(i + 1, balance);
+		}
+	}
+	int checkPin(int pin) {
+		int index = 0;
+		for(int i = 0; i < 10; i++) {
+			if(m_accounts[i].getPin() == pin) {
+				index = i + 1;
 			}
 		}
-		return accountNumber;
+		return index;
 	}
+	void newAccount(int pin, String firstName, String lastName) {
+		double standardInterest = 0.05;
+		again : for(int i = 0; i < 10; i++) {
+			if(getPin() == 0) {
+				setPin(pin);
+				setName(firstName, lastName);
+				setAnnualInterestRate(standardInterest);
+				break again;
+			}
+		}
+	}
+	
 }

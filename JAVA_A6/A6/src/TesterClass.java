@@ -1,10 +1,20 @@
+import javafx.application.Application;
+
 //import java.io.*;
 public class TesterClass {
-public static void main(String[] args) throws ClassNotFoundException {
-	//an array of objects for 10 Accounts
-	Account[] accounts = new Account[10];
+
+public static void main(String[] args) {
+	//Account accounts = new Account();
+	//accounts.initializeAccounts(100.00);
 	
-	
+	//Application.launch(ATMGUI_PG1.class, args); 
+	Application.launch(ATMGUI.class, args); 
+ 
+	for(int i = 0; i < 10; i++) {
+		//if(accounts[i].getPin() == tempPin) {
+			//accountNumber = i + 1;
+		//}
+	}
 	
 }
 }

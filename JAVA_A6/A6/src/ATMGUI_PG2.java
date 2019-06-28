@@ -52,8 +52,8 @@ public class ATMGUI_PG2 extends Application {
 		stage.setScene(scene); // Place the scene in the stage
 		stage.show(); // Display the stage
 	}
-
+/*
 	public static void main(String[] args) {
 		launch(args);
-	}
+	} */
 }
