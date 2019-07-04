@@ -1,5 +1,5 @@
 import java.util.Date;
-import java.io.Serializable;;
+import java.io.*;
 
 @SuppressWarnings("serial")
 public class Account implements Serializable {
@@ -110,5 +110,33 @@ public class Account implements Serializable {
 			}
 		}
 	}
-	
+	void serialize() {
+		String filename = "account.dat";
+		try {
+			FileOutputStream file = new FileOutputStream(filename);
+			ObjectOutputStream out = new ObjectOutputStream(file);
+			
+			for(int i = 0; i < 10; i++) {
+				out.writeObject(m_accounts[i]);
+			}
+			out.close();
+			file.close();
+			
+		}catch(Exception e) {
+			System.out.print(e + "\n");
+		}
+	}
+	void deserialize() {
+		String filename = "account.dat";
+		try {
+			FileInputStream file = new FileInputStream(filename);
+			ObjectInputStream in = new ObjectInputStream(file);
+			//while(EOF) {Account object = (Account)in.readObject();}
+			Account object = (Account)in.readObject();
+			in.close();
+			file.close();
+		}catch(Exception e) {
+			System.out.print(e + "\n");
+		}
+	}
 }
