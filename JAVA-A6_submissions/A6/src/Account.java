@@ -16,7 +16,7 @@ public class Account implements Serializable {     //change this so you have an 
 	private int m_pin;
 
 	// created an array of 10 account objects
-	Account[] m_accounts = new Account[10];
+	static Account[] m_accounts = new Account[10];
 
 	// constructors
 	Account() {
@@ -30,9 +30,13 @@ public class Account implements Serializable {     //change this so you have an 
 	}
 
 
-	Account(int id, double balance) {
-		m_id = id;
+	Account(double balance, String fn, String ln, double interestRate, int pin, int accountNo) {
+		m_id = accountNo;
 		m_balance = balance;
+		m_firstName = fn;
+		m_lastName = ln;
+		m_annualInterestRate = interestRate;
+		m_pin = pin;
 		m_dateCreated = new Date(System.currentTimeMillis());
 	}
 
@@ -75,30 +79,20 @@ public class Account implements Serializable {     //change this so you have an 
 	void setBalance(double balance) {
 		m_balance = balance;
 	}
+	void setDate() {
+		m_dateCreated =  new Date(System.currentTimeMillis());
+	}
 
 	void setAnnualInterestRate(double annualInterestRate) {
 		m_annualInterestRate = annualInterestRate;
 	}
 
-	// methods
 	// initializes accounts
-	void initialize(double balance) {
+	void initialize(double balance, String fn, String ln, double interestRate, int pin, int accountNo) {
+		
 		// initialize each account to have a balance of $100
-		for (int i = 0; i < 10; i++) {
-			m_accounts[i] = new Account(i + 1, balance);
-		}
-	}
-
-	void createAccount(String fn, String ln, double interestRate, int pin) {
-		// initialize each account to have a balance of $100
-		again : for (int i = 0; i < 10; i++) {
-			if(m_accounts[i].getName() == "\0") {
-			m_accounts[i].setNames(fn, ln);
-			m_accounts[i].setAnnualInterestRate(interestRate);
-			m_accounts[i].setPin(pin);
-			break again;
-			}
-		}
+		m_accounts[0] = new Account(balance, fn, ln, interestRate, pin, 0);
+		
 	}
 	// returns annual interest rate divided by 12 months
 	double getMonthlyInterestRate() {
@@ -111,16 +105,31 @@ public class Account implements Serializable {     //change this so you have an 
 	}
 
 	// withdraws amount from account
-	void withdraw(double withdrawalAmount) {
-		double balance = getBalance() - withdrawalAmount;
-		setBalance(balance);
+	void withdraw(double withdrawalAmount, int index) {
+		m_accounts[index].setBalance(m_accounts[index].getBalance() - withdrawalAmount);
 	}
 
 	// deposits amount into account
-	void deposits(double depositAmount) {
-		double balance = getBalance() + depositAmount;
-		setBalance(balance);
+	void deposits(double depositAmount, int index) {
+		
+		m_accounts[index].setBalance(m_accounts[index].getBalance() + depositAmount);
 	}
+	//checks if pin is valid and if it is present in the accounts array
+		Account validatePin(int accountNo, int pin, int index) {
+			Account account = null;
+			for(int i = 0; i < index; i++) {
+				if(m_accounts[i].getId() == accountNo && m_accounts[i].getPin() == pin) {
+					account = m_accounts[i];
+				}	
+			}
+			return account;
+		}
+		//returns account at index passed through
+		Account getAccount(int index) {
+		
+			return m_accounts[index];
+		}
+		
 	// serialize account objects
 	void serialize() {
 		String filename = "account.dat";
@@ -151,12 +160,12 @@ public class Account implements Serializable {     //change this so you have an 
 			
 		   for(int i = 0; i < m_accounts.length; i++) {
 			object = (Account) in.readObject();
-			
-			System.out.print("Date Created: " + object.getDateCreated() + "\n");
-			System.out.print("Account Number: " + object.getId() + "\n");
-			System.out.print("Account Holder: " + object.getName() + "\n");
-			System.out.print("Account Balance: " + object.getBalance() + "\n");
-			System.out.print("Annual Interest Rate: " + object.getAnnualInterestRate() + "\n\n");
+			m_accounts[i] = object;
+			System.out.print("Date Created: " + m_accounts[i].getDateCreated() + "\n");
+			System.out.print("Account Number: " + m_accounts[i].getId() + "\n");
+			System.out.print("Account Holder: " + m_accounts[i].getName() + "\n");
+			System.out.print("Account Balance: " + m_accounts[i].getBalance() + "\n");
+			System.out.print("Annual Interest Rate: " + m_accounts[i].getAnnualInterestRate() + "\n\n");
 			
 			}
 			in.close();
@@ -165,17 +174,6 @@ public class Account implements Serializable {     //change this so you have an 
 			System.out.print(e + "\n");
 		}
 	}
-	//checks if pin is valid and if it is present in the accounts array
-	Account validatePin(int pin) {
-		Account account = null;
-		for(int i = 0; i < m_accounts.length; i++) {
-			if(m_accounts[i].getPin() == pin) {
-				account = m_accounts[i];
-			}
-			
-		}
-		return account;
-	}
 	
-
 }
+
